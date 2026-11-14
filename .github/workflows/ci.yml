@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    name: macOS / stable
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - name: Format
+        run: cargo fmt --all -- --check
+      - name: Install Slang 2026.12
+        env:
+          SLANG_VERSION: 2026.12
+        run: |
+          python3 - <<'PY' > /tmp/slang-url
+          import json, os, urllib.request
+          tag = f"v{os.environ['SLANG_VERSION']}"
+          release = json.load(urllib.request.urlopen(f"https://api.github.com/repos/shader-slang/slang/releases/tags/{tag}"))
+          assets = release["assets"]
+          matches = [asset["browser_download_url"] for asset in assets if "macos" in asset["name"].lower() and asset["name"].lower().endswith(".zip")]
+          if not matches:
+              raise SystemExit("No macOS Slang ZIP asset found for " + tag)
+          print(matches[0])
+          PY
+          curl --fail --location "$(cat /tmp/slang-url)" --output /tmp/slang.zip
+          unzip -q /tmp/slang.zip -d "$RUNNER_TEMP/slang"
+          SLANGC="$(find "$RUNNER_TEMP/slang" -type f -name slangc -perm +111 | head -n 1)"
+          test -n "$SLANGC"
+          ln -s "$SLANGC" "$RUNNER_TEMP/slangc"
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+      - name: Compile and validate shaders
+        run: |
+          slangc -v
+          cargo run -p xtask -- shaders
+          cargo run -p xtask -- validate-shaders
+      - name: Lint
+        run: cargo clippy --workspace --all-targets -- -D warnings
+      - name: Test
+        run: cargo test --workspace
+      - name: Build sandbox
+        run: cargo build -p sandbox

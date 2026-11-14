@@ -1,0 +1,17 @@
+[package]
+name = "neural_lab"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+assets = { path = "../../crates/assets" }
+bytemuck.workspace = true
+egui.workspace = true
+egui-wgpu.workspace = true
+egui-winit.workspace = true
+pollster.workspace = true
+renderer = { path = "../../crates/renderer" }
+wgpu.workspace = true
+winit.workspace = true

@@ -1,0 +1,21 @@
+[package]
+name = "sandbox"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+assets = { path = "../../crates/assets" }
+editor_ui = { path = "../../crates/editor_ui" }
+egui.workspace = true
+egui-wgpu.workspace = true
+egui-winit.workspace = true
+engine = { path = "../../crates/engine" }
+glam.workspace = true
+hecs.workspace = true
+pollster.workspace = true
+renderer = { path = "../../crates/renderer" }
+scene = { path = "../../crates/scene" }
+shaders = { path = "../../crates/shaders" }
+wgpu.workspace = true
+winit.workspace = true

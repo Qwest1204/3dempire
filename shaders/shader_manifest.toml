@@ -1,0 +1,55 @@
+# Slang is the canonical source format from phase 4 onwards.
+# Generated WGSL is intentionally ignored by git and recreated by xtask.
+
+[[shader]]
+name = "debug_output"
+source = "shaders/slang/debug_output.slang"
+output = "shaders/generated/debug_output.wgsl"
+entries = [
+  { name = "vs_main", stage = "vertex" },
+  { name = "fs_main", stage = "fragment" },
+]
+# Compile definitions are passed to slangc as `-D name=value`. Keep the manifest
+# representation in place before adding material/render-path permutations.
+definitions = [
+  { name = "ENGINE_DEFERRED", value = "1" },
+  { name = "ENGINE_DEBUG_VIEW", value = "0" },
+]
+
+[[shader]]
+name = "deferred"
+source = "shaders/slang/deferred.slang"
+output = "shaders/generated/deferred.wgsl"
+entries = [
+  { name = "gbuffer_vs", stage = "vertex" },
+  { name = "gbuffer_fs", stage = "fragment" },
+  { name = "fullscreen_vs", stage = "vertex" },
+  { name = "composite_fs", stage = "fragment" },
+  { name = "debug_fs", stage = "fragment" },
+]
+definitions = [
+  { name = "ENGINE_DEFERRED", value = "1" },
+  { name = "ENGINE_DEBUG_VIEW", value = "0" },
+]
+variant = [
+  { name = "final", definitions = [{ name = "ENGINE_DEBUG_VIEW", value = "0" }] },
+  { name = "debug", definitions = [{ name = "ENGINE_DEBUG_VIEW", value = "1" }] },
+]
+
+[[shader]]
+name = "neural_texture"
+source = "shaders/slang/neural_texture.slang"
+output = "shaders/generated/neural_texture.wgsl"
+entries = [
+  { name = "vs_main", stage = "vertex" },
+  { name = "fs_main", stage = "fragment" },
+]
+
+[[shader]]
+name = "neural_fourier_texture"
+source = "shaders/slang/neural_fourier_texture.slang"
+output = "shaders/generated/neural_fourier_texture.wgsl"
+entries = [
+  { name = "vs_main", stage = "vertex" },
+  { name = "fs_main", stage = "fragment" },
+]

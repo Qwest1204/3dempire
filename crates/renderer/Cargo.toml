@@ -1,0 +1,15 @@
+[package]
+name = "renderer"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+assets = { path = "../assets" }
+bytemuck.workspace = true
+glam.workspace = true
+pollster.workspace = true
+shaders = { path = "../shaders" }
+wgpu.workspace = true
+winit.workspace = true
